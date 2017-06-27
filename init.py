@@ -38,10 +38,10 @@ ORANGE = 'O'"""
 
 #Game grid
 grid = []
-for row in range(10):
+for row in range(13):
     #add empty array
     grid.append([])
-    for column in range(11):
+    for column in range(12):
         grid[row].append(BLACK)
         
 # static Width and Height
@@ -50,6 +50,10 @@ HEIGHT = 30
 
 #Distance between cells
 MARGIN = 5
+
+#filler
+
+filler = [BLACK,BLACK,BLACK]
 
 """ Defining front """
 front1 = [RED, RED, RED]
@@ -95,19 +99,24 @@ def refresh():
     back = [back1,back2,back3]
     top_row = [top1,top2,top3]
     bottom_row = [bottom1,bottom2,bottom3]
-    row1 = [right_side[0],front[0],left_side[0],back[0]]
-    row2 = [right_side[1],front[1],left_side[1],back[1]]
-    row3 = [right_side[2],front[2],left_side[2],back[2]]
+    row1 = left_side[0] + front[0] + right_side[0] + back[0]
+    row2 = left_side[1] + front[1] + right_side[1] + back[1]
+    row3 = left_side[2] + front[2] + right_side[2] + back[2]
     rows = [row1,row2,row3]
-    grid[0][3:5] = top1
-    grid[1][3:5] = top2
-    grid[2][3:5] = top3
+    grid[0] = filler + top1 + filler + filler
+    grid[1] = filler + top2 + filler + filler
+    grid[2] = filler + top3 + filler + filler
     grid[3] = row1
     grid[4] = row2
     grid[5] = row3
-    grid[6][3:5] = bottom3
-    grid[7][3:5] = bottom2
-    grid[8][3:5] = bottom1
+    grid[6] = filler + bottom3 + filler + filler
+    grid[7] = filler + bottom2 + filler + filler
+    grid[8] = filler + bottom1 + filler + filler
+    grid[9][6] = (255,0,0)
+    grid[10][5] = (255,0,0)
+    grid[10][7] = (255,0,0)
+    grid[11][6] = (255,0,0)
+
 
 """Face rotations"""
 def face_left(row):
@@ -134,11 +143,11 @@ these can NOT be used for rows 7, 8, or 9 as those include eight lists rather th
 """Bringing side up"""
 def up(row_num): 
     row_num = row_num - 1
-    back_row_num = 3 - row_num
+    back_row_num = 2 - row_num
     buffer1 = [front[0][row_num],front[1][row_num],front[2][row_num]]
     buffer2 = [top_row[0][row_num],top_row[1][row_num],top_row[2][row_num]]
     buffer3 = [back[2][back_row_num],back[1][back_row_num],back2[0][back_row_num]]
-    buffer4 = [bottom_row[2][row_num],bottom_row[1][row_num],bottom_row[0][row_num]]
+    buffer4 = [bottom_row[0][row_num],bottom_row[1][row_num],bottom_row[2][row_num]]
 
     front[0][row_num] = buffer4[0]
     front[1][row_num] = buffer4[1]
@@ -159,7 +168,7 @@ def up(row_num):
 """Bringing side down"""
 def down(row_num): 
     row_num = row_num - 1
-    back_row_num = 3 - row_num
+    back_row_num = 2 - row_num
     buffer1 = [front[0][row_num],front[1][row_num],front[2][row_num]]
     buffer2 = [top_row[0][row_num],top_row[1][row_num],top_row[2][row_num]]
     buffer3 = [back[2][back_row_num],back[1][back_row_num],back2[0][back_row_num]]
@@ -185,11 +194,11 @@ def down(row_num):
 
 def side_up(row_num): 
     row_num = row_num - 1
-    back_row_num = 3 - row_num
+    back_row_num = 2 - row_num
     buffer1 = [left_side[0][row_num],left_side[1][row_num],left_side[2][row_num]]
-    buffer2 = [top_row[row_num]]
-    buffer3 = [right_side[2][back_row_num],right_side[1][back_row_num],right_side[0][back_row_num]]
-    buffer4 = [bottom_row[row_num]]
+    buffer2 = top_row[row_num]
+    buffer3 = [right_side[2],right_side[1],right_side[0]]
+    buffer4 = bottom_row[row_num]
 
     left_side[0][row_num] = buffer4[0]
     left_side[1][row_num] = buffer4[1]
@@ -199,9 +208,9 @@ def side_up(row_num):
     top_row[row_num][1] = buffer1[1]
     top_row[row_num][2] = buffer1[2]
 
-    right[2][back_row_num] = buffer2[0]
-    right[1][back_row_num] = buffer2[1]
-    right[0][back_row_num] = buffer2[2]
+    right_side[0][row_num] = buffer2[0]
+    right_side[1][row_num] = buffer2[1]
+    right_side[2][row_num] = buffer2[2]
 
     bottom_row[row_num][0] = buffer3[0]
     bottom_row[row_num][1] = buffer3[1]
@@ -209,11 +218,11 @@ def side_up(row_num):
 
 def side_down(row_num): 
     row_num = row_num - 1
-    back_row_num = 3 - row_num
+    back_row_num = 2 - row_num
     buffer1 = [left_side[0][row_num],left_side[1][row_num],left_side[2][row_num]]
-    buffer2 = [top_row[row_num]]
+    buffer2 = top_row[row_num]
     buffer3 = [right_side[2][back_row_num],right_side[1][back_row_num],right_side[0][back_row_num]]
-    buffer4 = [bottom_row[row_num]]
+    buffer4 = bottom_row[row_num]
 
     left_side[0][row_num] = buffer2[0]
     left_side[1][row_num] = buffer2[1]
@@ -223,9 +232,9 @@ def side_down(row_num):
     top_row[row_num][1] = buffer3[1]
     top_row[row_num][2] = buffer3[2]
 
-    right[2][back_row_num] = buffer4[0]
-    right[1][back_row_num] = buffer4[1]
-    right[0][back_row_num] = buffer4[2]
+    right_side[0][back_row_num] = buffer4[0]
+    right_side[1][back_row_num] = buffer4[1]
+    right_side[2][back_row_num] = buffer4[2]
 
     bottom_row[row_num][0] = buffer1[0]
     bottom_row[row_num][1] = buffer1[1]
@@ -235,9 +244,8 @@ def side_down(row_num):
     
 """defining rotations"""
 def rotate(row,direction):
-    direction = direction.lower()
     if row <= 3 and row > 0:
-        if direction == 'left' or direction =='l':
+        if direction == 'left':
             buffer1 = rows[row][0] #Buffer exists in order to ensure no data is lost
             rows[row][0] = rows[row][3]
             rows[row][3] = rows[row][2]
@@ -247,7 +255,7 @@ def rotate(row,direction):
                 top_row = face_left(top_row)
             elif row == 3: #checks for bottom row
                 bottom_row = face_right(bottom_row)
-        elif direction == 'right' or direction =='r':
+        elif direction == 'right':
             buffer1 = rows[row][0]
             rows[row][0] = rows[row][1]
             rows[row][1] = rows[row][2]
@@ -257,53 +265,57 @@ def rotate(row,direction):
                 top_row = face_right(top_row)
             if row == 3: #checks if bottom row
                 bottom_row = face_left(bottom_row)
+            
         else:
-            print 'command not recognised'
+            return False
     elif 3<row<=6:
-        if direction == 'up' or direction == 'u':
-            up(row)
+        if direction == 'up':
             if row == 4:
-                left_side = face_right(left_side)
+                up(1)
+                left_side = face_right([left1,left2,left3])
+            elif row == 5:
+                up(2)
             elif row == 6:
+                up(3)
                 right_side = face_left(right_side)
-        if direction  =='down' or direction == 'd':
+        if direction  =='down':
             down(row)
             if row == 4:
                 left_side = face_left(left_side)
             elif row == 6:
                 right_side = face_right(right_side)
         else:
-            print 'command not recognised'
+            return False
     elif 6<row<=9:
-        if direction == 'up' or direction == 'u':
+        if direction == 'up':
             if row == 7:
                 side_up(1) #uses slightly modified up function code
                 front = face_left(front)
             elif row == 8:
                 side_up(2)
             elif row == 9:
-                side_up(3)
+                side_up(1)
                 back = face_right(back)
-        if direction == 'down' or direction == 'd':
+        if direction == 'down':
             if row == 7:
                 side_down(1) #uses slightly modified down function code
                 front = face_right(front)
             elif row == 8:
                 side_down(2)
             elif row == 9:
-                side_down(3)
-                back = face_left(back)
+                side_down(1)
+                back = face_left([back1,back2,back3])
             else:
-                print 'command not recognised'
+                return False
     else:
-        print 'number out of bounds'
+        return False
 
 refresh()
 #starting pygame
 pygame.init()
 
 #Setting window dimensions
-WINDOW_SIZE = [425,320]
+WINDOW_SIZE = [425,460]
 screen = pygame.display.set_mode(WINDOW_SIZE)
 
 #Giving window a title
@@ -312,7 +324,7 @@ pygame.display.set_caption("Rubicks Cube in python test v0.0001")
 #manage refresh rate
 
 clock = pygame.time.Clock()
-
+command = [0,0]
 #variable that declares whether the game is running or not
 stopped = False
 while not stopped:
@@ -323,16 +335,39 @@ while not stopped:
             pos = pygame.mouse.get_pos()
             column = pos[0] // (WIDTH + MARGIN)
             row = pos[1] // (HEIGHT + MARGIN)
-    screen.fill(BLACK)
+            if row == 10 and column == 5:
+                command[0] = "left"
+            if row == 10 and column == 7:
+                command[0] = "right"
+            if row == 9 and column == 6:
+                command[0] = "up"
+            if row == 11 and column == 6:
+                command[0] = "down"
+
+            if row == 0 and column > 2 and column < 6:
+                command[1] = 9
+                if command[0] == "left":
+                    command[0] = "down"
+                if command[0] == "right":
+                    command[0] = "up"
+                if command[0] == "up":
+                    if column == 3:
+                        command[1] = 4
+                    if column == 4:
+                        command[1] = 5
+                    if column == 5:
+                        command[1] = 6
+    if command[0] != 0 and command[1] != 0:
+        rotate(command[1],command[0])
+        print command
+        command = [0,0]
     refresh()
 
     #draw grid
-    for row in range(10):
-        for column in range(11):
+    for row in range(13):
+        for column in range(12):
             Color = grid[row][column]
-            pygame.draw.rect(screen,Color,
-                             [((MARGIN + WIDTH) * column + MARGIN, (MARGIN + HEIGHT) * row + MARGIN),
-                              (WIDTH ,HEIGHT)])
+            pygame.draw.rect(screen,Color,[((MARGIN + WIDTH) * column + MARGIN, (MARGIN + HEIGHT) * row + MARGIN),(WIDTH ,HEIGHT)])
     clock.tick(60)
 
     pygame.display.flip()
