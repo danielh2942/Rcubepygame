@@ -91,6 +91,29 @@ bottom2 = [WHITE, WHITE, WHITE]
 bottom3 = [WHITE, WHITE, WHITE]
 bottom_row = [bottom1,bottom2,bottom3]
 
+"""rows"""
+row1 = left_side[0] + front[0] + right_side[0] + back[0]
+row2 = left_side[1] + front[1] + right_side[1] + back[1]
+row3 = left_side[2] + front[2] + right_side[2] + back[2]
+rows = [row1,row2,row3]
+
+#Functions
+"""Up down conditional for top and bottom for left/right movements of top only"""
+
+def up_down_conditional(row):
+    if row == 0:
+        return 9
+    elif row == 1:
+        return 8
+    elif row == 2:
+        return 7
+    elif row == 6:
+        return 7
+    elif row == 7:
+        return 8
+    elif row == 8:
+        return 9
+
 """defining the layout"""
 def refresh():
     front = [front1,front2,front3]
@@ -106,9 +129,9 @@ def refresh():
     grid[0] = filler + top1 + filler + filler
     grid[1] = filler + top2 + filler + filler
     grid[2] = filler + top3 + filler + filler
-    grid[3] = row1
-    grid[4] = row2
-    grid[5] = row3
+    grid[3] = rows[0]
+    grid[4] = rows[1]
+    grid[5] = rows[2]
     grid[6] = filler + bottom3 + filler + filler
     grid[7] = filler + bottom2 + filler + filler
     grid[8] = filler + bottom1 + filler + filler
@@ -245,16 +268,19 @@ def side_down(row_num):
 """defining rotations"""
 def rotate(row,direction):
     if row <= 3 and row > 0:
+        row = row - 1
         if direction == 'left':
             buffer1 = rows[row][0] #Buffer exists in order to ensure no data is lost
+            print rows[row]
             rows[row][0] = rows[row][3]
             rows[row][3] = rows[row][2]
             rows[row][2] = rows[row][1]  #rotates all left
             rows[row][1] = buffer1
+            print rows[row]
             if row == 1: #checks if top row
-                top_row = face_left(top_row)
+                top_row = face_left([top1,top2,top3])
             elif row == 3: #checks for bottom row
-                bottom_row = face_right(bottom_row)
+                bottom_row = face_right([bottom1,bottom2,bottom3])
         elif direction == 'right':
             buffer1 = rows[row][0]
             rows[row][0] = rows[row][1]
@@ -262,9 +288,9 @@ def rotate(row,direction):
             rows[row][2] = rows[row][3]
             rows[row][3] = buffer1
             if row == 1: #checks if top
-                top_row = face_right(top_row)
+                top_row = face_right([top1,top2,top3])
             if row == 3: #checks if bottom row
-                bottom_row = face_left(bottom_row)
+                bottom_row = face_left([bottom1,bottom2,bottom3])
             
         else:
             return False
@@ -277,29 +303,29 @@ def rotate(row,direction):
                 up(2)
             elif row == 6:
                 up(3)
-                right_side = face_left(right_side)
+                right_side = face_left([right1,right2,right3])
         if direction  =='down':
             down(row)
             if row == 4:
-                left_side = face_left(left_side)
+                left_side = face_left([left1,left2,left3])
             elif row == 6:
-                right_side = face_right(right_side)
+                right_side = face_right([right1,right2,right3])
         else:
             return False
     elif 6<row<=9:
         if direction == 'up':
             if row == 7:
-                side_up(1) #uses slightly modified up function code
-                front = face_left(front)
+                side_up(3) #uses slightly modified up function code
+                front = face_left([front1,front2,front3])
             elif row == 8:
                 side_up(2)
             elif row == 9:
                 side_up(1)
-                back = face_right(back)
+                back = face_right([back1,back2,back3])
         if direction == 'down':
             if row == 7:
-                side_down(1) #uses slightly modified down function code
-                front = face_right(front)
+                side_down(3) #uses slightly modified down function code
+                front = face_right([front1,front2,front3])
             elif row == 8:
                 side_down(2)
             elif row == 9:
@@ -344,19 +370,29 @@ while not stopped:
             if row == 11 and column == 6:
                 command[0] = "down"
 
-            if row == 0 and column > 2 and column < 6:
+            if (row == 0 or row == 1 or row == 2) and column > 2 and column < 6:
                 command[1] = 9
                 if command[0] == "left":
                     command[0] = "down"
-                if command[0] == "right":
+                    command[1] = up_down_conditional(row)
+                elif command[0] == "right":
                     command[0] = "up"
-                if command[0] == "up":
+                    command[1] = up_down_conditional(row)
+                elif command[0] == "up":
                     if column == 3:
                         command[1] = 4
                     if column == 4:
                         command[1] = 5
                     if column == 5:
                         command[1] = 6
+            elif row == 3 or row == 4 or row == 5:
+                if command[0] == "left":
+                    if row == 3:
+                        command[1] = 1
+                    if row == 4:
+                        command[1] = 2
+                    if row == 5:
+                        command[1] = 3
     if command[0] != 0 and command[1] != 0:
         rotate(command[1],command[0])
         print command
