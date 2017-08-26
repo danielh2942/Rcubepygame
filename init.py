@@ -2,7 +2,7 @@ import pygame
 """
 Rubicks cube in python 
 test
-version 0.001
+version 0.3
 2017 Daniel Hannon
 
 
@@ -25,7 +25,7 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
+BLUE = (0, 0, 128)
 YELLOW = (255, 255, 0)
 ORANGE = (248, 156, 83)
 """BLACK = 'B'
@@ -165,28 +165,29 @@ these can NOT be used for rows 7, 8, or 9 as those include eight lists rather th
 
 """Bringing side up"""
 def up(row_num): 
-    row_num = row_num - 1
-    back_row_num = 2 - row_num
+    row_num = row_num - 1 #row number
+    back_row_num = 2 - row_num #row number for reverse
     buffer1 = [front[0][row_num],front[1][row_num],front[2][row_num]]
     buffer2 = [top_row[0][row_num],top_row[1][row_num],top_row[2][row_num]]
-    buffer3 = [back[2][back_row_num],back[1][back_row_num],back2[0][back_row_num]]
+    buffer3 = [back[2][back_row_num],back[1][back_row_num],back[2][back_row_num]]
     buffer4 = [bottom_row[0][row_num],bottom_row[1][row_num],bottom_row[2][row_num]]
-
-    front[0][row_num] = buffer4[0]
-    front[1][row_num] = buffer4[1]
-    front[2][row_num] = buffer4[2]
-
-    top_row[0][row_num] = buffer1[0]
-    top_row[1][row_num] = buffer1[1]
-    top_row[2][row_num] = buffer1[2]
 
     back[2][back_row_num] = buffer2[0]
     back[1][back_row_num] = buffer2[1]
     back[0][back_row_num] = buffer2[2]
 
+    front[0][row_num] = buffer4[0]
+    front[1][row_num] = buffer4[1]
+    front[2][row_num] = buffer4[2]
+
     bottom_row[0][row_num] = buffer3[0]
     bottom_row[1][row_num] = buffer3[1]
     bottom_row[2][row_num] = buffer3[2]
+
+    top_row[0][row_num] = buffer1[0]
+    top_row[1][row_num] = buffer1[1]
+    top_row[2][row_num] = buffer1[2]
+
 
 """Bringing side down"""
 def down(row_num): 
@@ -194,7 +195,7 @@ def down(row_num):
     back_row_num = 2 - row_num
     buffer1 = [front[0][row_num],front[1][row_num],front[2][row_num]]
     buffer2 = [top_row[0][row_num],top_row[1][row_num],top_row[2][row_num]]
-    buffer3 = [back[2][back_row_num],back[1][back_row_num],back2[0][back_row_num]]
+    buffer3 = [back[2][back_row_num],back[1][back_row_num],back[2][back_row_num]]
     buffer4 = [bottom_row[2][row_num],bottom_row[1][row_num],bottom_row[0][row_num]]
 
     front[0][row_num] = buffer2[0]
@@ -218,26 +219,29 @@ def down(row_num):
 def side_up(row_num): 
     row_num = row_num - 1
     back_row_num = 2 - row_num
+    
     buffer1 = [left_side[0][row_num],left_side[1][row_num],left_side[2][row_num]]
     buffer2 = top_row[row_num]
-    buffer3 = [right_side[2],right_side[1],right_side[0]]
+    buffer3 = [right_side[2][back_row_num],right_side[1][back_row_num],right_side[0][back_row_num]]
     buffer4 = bottom_row[row_num]
+
+    right_side[0][back_row_num] = buffer2[0]
+    right_side[1][back_row_num] = buffer2[1]
+    right_side[2][back_row_num] = buffer2[2]
 
     left_side[0][row_num] = buffer4[0]
     left_side[1][row_num] = buffer4[1]
     left_side[2][row_num] = buffer4[2]
 
-    top_row[row_num][0] = buffer1[0]
-    top_row[row_num][1] = buffer1[1]
-    top_row[row_num][2] = buffer1[2]
-
-    right_side[0][row_num] = buffer2[0]
-    right_side[1][row_num] = buffer2[1]
-    right_side[2][row_num] = buffer2[2]
-
     bottom_row[row_num][0] = buffer3[0]
     bottom_row[row_num][1] = buffer3[1]
     bottom_row[row_num][2] = buffer3[2]
+
+    top_row[row_num][0] = buffer1[2]
+    top_row[row_num][1] = buffer1[1]
+    top_row[row_num][2] = buffer1[0]
+
+
 
 def side_down(row_num): 
     row_num = row_num - 1
@@ -247,18 +251,18 @@ def side_down(row_num):
     buffer3 = [right_side[2][back_row_num],right_side[1][back_row_num],right_side[0][back_row_num]]
     buffer4 = bottom_row[row_num]
 
-    left_side[0][row_num] = buffer2[0]
+    left_side[0][row_num] = buffer2[2]
     left_side[1][row_num] = buffer2[1]
-    left_side[2][row_num] = buffer2[2]
+    left_side[2][row_num] = buffer2[0]
 
-    top_row[row_num][0] = buffer3[0]
+    top_row[row_num][0] = buffer3[2]
     top_row[row_num][1] = buffer3[1]
-    top_row[row_num][2] = buffer3[2]
+    top_row[row_num][2] = buffer3[0]
 
-    right_side[0][back_row_num] = buffer4[0]
+    right_side[0][back_row_num] = buffer4[2]
     right_side[1][back_row_num] = buffer4[1]
-    right_side[2][back_row_num] = buffer4[2]
-
+    right_side[2][back_row_num] = buffer4[0]
+    
     bottom_row[row_num][0] = buffer1[0]
     bottom_row[row_num][1] = buffer1[1]
     bottom_row[row_num][2] = buffer1[2]
@@ -270,12 +274,15 @@ def rotate(row,direction):
     if row <= 3 and row > 0:
         row = row - 1
         if direction == 'left':
-            buffer1 = rows[row][0] #Buffer exists in order to ensure no data is lost
+            buffer1 = left_side[row] #Buffer exists in order to ensure no data is lost
+            buffer2 = right_side[row]
+            buffer3 = front[row]
+            buffer4 = back[row]
             print rows[row]
-            rows[row][0] = rows[row][3]
-            rows[row][3] = rows[row][2]
-            rows[row][2] = rows[row][1]  #rotates all left
-            rows[row][1] = buffer1
+            left_side[row] = buffer4
+            back[row] = buffer2
+            right_side[row] = buffer3  #rotates all left
+            front[row] = buffer1
             print rows[row]
             if row == 1: #checks if top row
                 top_row = face_left([top1,top2,top3])
@@ -312,7 +319,7 @@ def rotate(row,direction):
                 right_side = face_right([right1,right2,right3])
         else:
             return False
-    elif 6<row<=9:
+    elif 6<row<=9: #top region
         if direction == 'up':
             if row == 7:
                 side_up(3) #uses slightly modified up function code
@@ -322,6 +329,8 @@ def rotate(row,direction):
             elif row == 9:
                 side_up(1)
                 back = face_right([back1,back2,back3])
+                
+                
         if direction == 'down':
             if row == 7:
                 side_down(3) #uses slightly modified down function code
@@ -394,6 +403,7 @@ while not stopped:
                     if row == 5:
                         command[1] = 3
     if command[0] != 0 and command[1] != 0:
+        refresh()
         rotate(command[1],command[0])
         print command
         command = [0,0]
