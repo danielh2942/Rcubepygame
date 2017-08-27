@@ -1,4 +1,5 @@
 import pygame
+
 """
 Rubicks cube in python 
 test
@@ -19,6 +20,10 @@ left3 front3 right3 back3
       bottom1
 
 """
+#initiate debugging
+debugging = False
+if debugging == True:
+    output = open("movelog.txt","w+")
  
 # colors
 BLACK = (0, 0, 0)
@@ -142,22 +147,62 @@ def refresh():
 
 
 """Face rotations"""
-def face_left(row):
-    buffer1 = row[2]
-    buffer2 = row[1]
-    buffer3 = row[0]
-    row[0] = [buffer1[0],buffer2[0],buffer3[0]]
-    row[1] = [buffer1[1],buffer2[1],buffer3[1]]
-    row[2] = [buffer1[2],buffer2[2],buffer3[2]]
+def face_rotation(row,direction): #theoretically works, no proof beyond isolated check though
+    print [row,direction]
+    global top_row
+    global bottom_row
+    global left_side
+    global right_side
+    global front
+    global back
+    if row == 'top':
+        face = [top_row[0],top_row[1],top_row[2]]
+        print 'top row rotation'
+        print top_row
+    if row == 'bottom':
+        face = [bottom_row[0],bottom_row[1],bottom_row[2]]
+    if row == 'left':
+        face = [left_side[0],left_side[1],left_side[2]]
+    if row == 'right':
+        face = [right_side[0],right_side[1],right_side[2]]
+    if row == 'front':
+        face = [front[0],front[1],front[2]]
+    if row == 'back':
+        face = [back[0],back[1],back[2]]
+        
+    if direction == 'left':
+        buffer1 = face[2]
+        buffer2 = face[1]
+        buffer3 = face[0]
+        face[0] = [buffer1[0],buffer2[0],buffer3[0]]
+        face[1] = [buffer1[1],buffer2[1],buffer3[1]]
+        face[2] = [buffer1[2],buffer2[2],buffer3[2]]
+        print face
 
-def face_right(row):
-    buffer1 = row[2]
-    buffer2 = row[1]
-    buffer3 = row[0]
-    row[0] = [buffer1[2],buffer2[2],buffer3[2]]
-    row[1] = [buffer1[1],buffer2[1],buffer3[1]]
-    row[2] = [buffer1[0],buffer2[0],buffer3[0]]
 
+    if direction =='right':
+        buffer1 = face[2]
+        buffer2 = face[1]
+        buffer3 = face[0]
+        face[0] = [buffer1[2],buffer2[2],buffer3[2]]
+        face[1] = [buffer1[1],buffer2[1],buffer3[1]]
+        face[2] = [buffer1[0],buffer2[0],buffer3[0]]
+        print face
+
+    if row == 'top':
+        top1 = face[0]
+        top2 = face[1]
+        top3 = face[2]
+        refresh()
+    if row == 'bottom':
+        bottom_row = face
+    if row == 'left':
+        left_side = face
+    if row == 'right':
+        right_side = face
+    if row == 'front':
+        front = face
+        
 """
 up/down side rotations
 these can NOT be used for rows 7, 8, or 9 as those include eight lists rather than 12
@@ -169,20 +214,20 @@ def up(row_num):
     back_row_num = 2 - row_num #row number for reverse
     buffer1 = [front[0][row_num],front[1][row_num],front[2][row_num]]
     buffer2 = [top_row[0][row_num],top_row[1][row_num],top_row[2][row_num]]
-    buffer3 = [back[2][back_row_num],back[1][back_row_num],back[2][back_row_num]]
+    buffer3 = [back[2][back_row_num],back[1][back_row_num],back[0][back_row_num]]
     buffer4 = [bottom_row[0][row_num],bottom_row[1][row_num],bottom_row[2][row_num]]
 
     back[2][back_row_num] = buffer2[0]
     back[1][back_row_num] = buffer2[1]
     back[0][back_row_num] = buffer2[2]
 
-    front[0][row_num] = buffer4[0]
+    front[0][row_num] = buffer4[2]
     front[1][row_num] = buffer4[1]
-    front[2][row_num] = buffer4[2]
+    front[2][row_num] = buffer4[0]
 
-    bottom_row[0][row_num] = buffer3[0]
+    bottom_row[0][row_num] = buffer3[2]
     bottom_row[1][row_num] = buffer3[1]
-    bottom_row[2][row_num] = buffer3[2]
+    bottom_row[2][row_num] = buffer3[0]
 
     top_row[0][row_num] = buffer1[0]
     top_row[1][row_num] = buffer1[1]
@@ -195,12 +240,12 @@ def down(row_num):
     back_row_num = 2 - row_num
     buffer1 = [front[0][row_num],front[1][row_num],front[2][row_num]]
     buffer2 = [top_row[0][row_num],top_row[1][row_num],top_row[2][row_num]]
-    buffer3 = [back[2][back_row_num],back[1][back_row_num],back[2][back_row_num]]
+    buffer3 = [back[2][back_row_num],back[1][back_row_num],back[0][back_row_num]]
     buffer4 = [bottom_row[2][row_num],bottom_row[1][row_num],bottom_row[0][row_num]]
 
-    front[0][row_num] = buffer2[0]
+    front[0][row_num] = buffer2[2]
     front[1][row_num] = buffer2[1]
-    front[2][row_num] = buffer2[2]
+    front[2][row_num] = buffer2[0]
 
     top_row[0][row_num] = buffer3[0]
     top_row[1][row_num] = buffer3[1]
@@ -210,9 +255,9 @@ def down(row_num):
     back[1][back_row_num] = buffer4[1]
     back[0][back_row_num] = buffer4[2]
 
-    bottom_row[0][row_num] = buffer1[0]
+    bottom_row[0][row_num] = buffer1[2]
     bottom_row[1][row_num] = buffer1[1]
-    bottom_row[2][row_num] = buffer1[2]
+    bottom_row[2][row_num] = buffer1[0]
 
 """Rows 7 - 9 up/down rotations"""
 
@@ -273,73 +318,111 @@ def side_down(row_num):
 def rotate(row,direction):
     if row <= 3 and row > 0:
         row = row - 1
+        global left_side
+        global right_side
+        global back
+        global front
         if direction == 'left':
-            buffer1 = left_side[row] #Buffer exists in order to ensure no data is lost
+
+            buffer1 = [left_side[row][0],left_side[row][1],left_side[row][2]] #Buffer exists in order to ensure no data is lost
             buffer2 = right_side[row]
             buffer3 = front[row]
             buffer4 = back[row]
-            print rows[row]
-            left_side[row] = buffer4
-            back[row] = buffer2
-            right_side[row] = buffer3  #rotates all left
-            front[row] = buffer1
-            print rows[row]
-            if row == 1: #checks if top row
-                top_row = face_left([top1,top2,top3])
-            elif row == 3: #checks for bottom row
-                bottom_row = face_right([bottom1,bottom2,bottom3])
-        elif direction == 'right':
-            buffer1 = rows[row][0]
-            rows[row][0] = rows[row][1]
-            rows[row][1] = rows[row][2]
-            rows[row][2] = rows[row][3]
-            rows[row][3] = buffer1
-            if row == 1: #checks if top
-                top_row = face_right([top1,top2,top3])
-            if row == 3: #checks if bottom row
-                bottom_row = face_left([bottom1,bottom2,bottom3])
             
-        else:
-            return False
+            #rotates all left
+
+            print rows[row]
+            if row == 0: #checks if top row
+                face_rotation('top','right')
+            elif row == 2: #checks for bottom row
+                face_rotation('bottom','left')
+        elif direction == 'right':
+            buffer2 = [left_side[row][0],left_side[row][1],left_side[row][2]] #Buffer exists in order to ensure no data is lost
+            buffer1 = [right_side[row][0],right_side[row][1],right_side[row][2]]
+            buffer4 = [front[row][0],front[row][1],front[row][2]]
+            buffer3 = [back[row][0],back[row][1],back[row][2]]
+            if row == 0: #checks if top
+                face_rotation('top','left')
+            if row == 2: #checks if bottom row
+                face_rotation('bottom','right')
+            
+        if direction == 'right':
+
+            left_side[row][0] = buffer3[0]
+            left_side[row][1] = buffer3[1]
+            left_side[row][2] = buffer3[2]
+
+            back[row][0] = buffer1[0]
+            back[row][1] = buffer1[1]
+            back[row][2] = buffer1[2]
+            
+            right_side[row][0] = buffer4[0]
+            right_side[row][1] = buffer4[1]
+            right_side[row][2] = buffer4[2]
+
+            front[row][0] = buffer2[0]
+            front[row][1] = buffer2[1]
+            front[row][2] = buffer2[2]
+            
+        elif direction == 'left':
+
+            left_side[row][0] = buffer3[0]
+            left_side[row][1] = buffer3[1]
+            left_side[row][2] = buffer3[2]
+
+            front[row][0] = buffer2[0]
+            front[row][1] = buffer2[1]
+            front[row][2] = buffer2[2]
+
+            right_side[row][0] = buffer4[0]
+            right_side[row][1] = buffer4[1]
+            right_side[row][2] = buffer4[2]
+
+            back[row][0] = buffer1[0]
+            back[row][1] = buffer1[1]
+            back[row][2] = buffer1[2]
+
+            
+        
     elif 3<row<=6:
         if direction == 'up':
             if row == 4:
                 up(1)
-                left_side = face_right([left1,left2,left3])
+                face_rotation('left','left')
             elif row == 5:
                 up(2)
             elif row == 6:
                 up(3)
-                right_side = face_left([right1,right2,right3])
+                face_rotation('right','right')
         if direction  =='down':
             down(row)
             if row == 4:
-                left_side = face_left([left1,left2,left3])
+                face_rotation('left','right')
             elif row == 6:
-                right_side = face_right([right1,right2,right3])
+                face_rotation('right','left')
         else:
             return False
     elif 6<row<=9: #top region
         if direction == 'up':
             if row == 7:
                 side_up(3) #uses slightly modified up function code
-                front = face_left([front1,front2,front3])
+                face_rotation('front','right')
             elif row == 8:
                 side_up(2)
             elif row == 9:
                 side_up(1)
-                back = face_right([back1,back2,back3])
+                face_rotation('back','right')
                 
                 
         if direction == 'down':
             if row == 7:
                 side_down(3) #uses slightly modified down function code
-                front = face_right([front1,front2,front3])
+                face_rotation('front','left')
             elif row == 8:
                 side_down(2)
             elif row == 9:
                 side_down(1)
-                back = face_left([back1,back2,back3])
+                face_rotation('back','right')
             else:
                 return False
     else:
@@ -395,7 +478,7 @@ while not stopped:
                     if column == 5:
                         command[1] = 6
             elif row == 3 or row == 4 or row == 5:
-                if command[0] == "left":
+                if command[0] == "left" or command[0] == 'right':
                     if row == 3:
                         command[1] = 1
                     if row == 4:
@@ -403,9 +486,16 @@ while not stopped:
                     if row == 5:
                         command[1] = 3
     if command[0] != 0 and command[1] != 0:
-        refresh()
         rotate(command[1],command[0])
         print command
+        if debugging == True:
+            output.write("\n %s"%(command))
+            i = 0
+            while i <= 9:
+                output.write("\n %s"%(grid[i]))
+                i += 1
+                if i == 10:
+                    break
         command = [0,0]
     refresh()
 
