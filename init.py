@@ -1,7 +1,7 @@
 import pygame
 
 """
-Rubicks cube in python 
+Rubiks cube in python 
 test
 version 0.3
 2017 Daniel Hannon
