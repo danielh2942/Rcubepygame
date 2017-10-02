@@ -1,9 +1,10 @@
+from random import randint
 import pygame
 
 """
-Rubiks cube in python 
+Rubicks cube in python 
 test
-version 0.3
+version 1
 2017 Daniel Hannon
 
 
@@ -59,42 +60,46 @@ MARGIN = 5
 #filler
 
 filler = [BLACK,BLACK,BLACK]
+def reset():
+    """ Defining front """
+    front1 = [RED, RED, RED]
+    front2 = [RED, RED, RED]
+    front3 = [RED, RED, RED]
+    front = [front1,front2,front3]
 
-""" Defining front """
-front1 = [RED, RED, RED]
-front2 = [RED, RED, RED]
-front3 = [RED, RED, RED]
-front = [front1,front2,front3]
+    """defining left side """
+    left1 = [YELLOW, YELLOW, YELLOW]
+    left2 = [YELLOW, YELLOW, YELLOW]
+    left3 = [YELLOW, YELLOW, YELLOW]
+    left_side = [left1,left2,left3]
 
-"""defining left side """
-left1 = [YELLOW, YELLOW, YELLOW]
-left2 = [YELLOW, YELLOW, YELLOW]
-left3 = [YELLOW, YELLOW, YELLOW]
-left_side = [left1,left2,left3]
+    """defining right side"""
+    right1 = [GREEN, GREEN, GREEN]
+    right2 = [GREEN, GREEN, GREEN]
+    right3 = [GREEN, GREEN, GREEN]
+    right_side = [right1,right2,right3]
 
-"""defining right side"""
-right1 = [GREEN, GREEN, GREEN]
-right2 = [GREEN, GREEN, GREEN]
-right3 = [GREEN, GREEN, GREEN]
-right_side = [right1,right2,right3]
+    """defining back"""
+    back1 = [BLUE, BLUE, BLUE]
+    back2 = [BLUE, BLUE, BLUE]
+    back3 = [BLUE, BLUE, BLUE]
+    back = [back1,back2,back3]
 
-"""defining back"""
-back1 = [BLUE, BLUE, BLUE]
-back2 = [BLUE, BLUE, BLUE]
-back3 = [BLUE, BLUE, BLUE]
-back = [back1,back2,back3]
+    """defining top"""
+    top1 = [ORANGE, ORANGE, ORANGE]
+    top2 = [ORANGE, ORANGE, ORANGE]
+    top3 = [ORANGE, ORANGE, ORANGE]
+    top_row = [top1,top2,top3]
 
-"""defining top"""
-top1 = [ORANGE, ORANGE, ORANGE]
-top2 = [ORANGE, ORANGE, ORANGE]
-top3 = [ORANGE, ORANGE, ORANGE]
-top_row = [top1,top2,top3]
+    """defining bottom"""
+    bottom1 = [WHITE, WHITE, WHITE]
+    bottom2 = [WHITE, WHITE, WHITE]
+    bottom3 = [WHITE, WHITE, WHITE]
+    bottom_row = [bottom1,bottom2,bottom3]
 
-"""defining bottom"""
-bottom1 = [WHITE, WHITE, WHITE]
-bottom2 = [WHITE, WHITE, WHITE]
-bottom3 = [WHITE, WHITE, WHITE]
-bottom_row = [bottom1,bottom2,bottom3]
+    return front,left_side,right_side,back,top_row,bottom_row
+
+front,left_side,right_side,back,top_row,bottom_row = reset()
 
 """rows"""
 row1 = left_side[0] + front[0] + right_side[0] + back[0]
@@ -120,30 +125,32 @@ def up_down_conditional(row):
         return 9
 
 """defining the layout"""
-def refresh():
-    front = [front1,front2,front3]
+def refresh(left_side,right_side,top_row,bottom_row,front,back):
+    """front = [front1,front2,front3]
     left_side = [left1,left2,left3]
     right_side = [right1,right2,right3]
     back = [back1,back2,back3]
     top_row = [top1,top2,top3]
-    bottom_row = [bottom1,bottom2,bottom3]
+    bottom_row = [bottom1,bottom2,bottom3]"""
     row1 = left_side[0] + front[0] + right_side[0] + back[0]
     row2 = left_side[1] + front[1] + right_side[1] + back[1]
     row3 = left_side[2] + front[2] + right_side[2] + back[2]
     rows = [row1,row2,row3]
-    grid[0] = filler + top1 + filler + filler
-    grid[1] = filler + top2 + filler + filler
-    grid[2] = filler + top3 + filler + filler
+    grid[0] = filler + top_row[0] + filler + filler
+    grid[1] = filler + top_row[1] + filler + filler
+    grid[2] = filler + top_row[2] + filler + filler
     grid[3] = rows[0]
     grid[4] = rows[1]
     grid[5] = rows[2]
-    grid[6] = filler + bottom3 + filler + filler
-    grid[7] = filler + bottom2 + filler + filler
-    grid[8] = filler + bottom1 + filler + filler
+    grid[6] = filler + bottom_row[2] + filler + filler
+    grid[7] = filler + bottom_row[1] + filler + filler
+    grid[8] = filler + bottom_row[0] + filler + filler
     grid[9][6] = (255,0,0)
     grid[10][5] = (255,0,0)
     grid[10][7] = (255,0,0)
     grid[11][6] = (255,0,0)
+    grid[11][11] = (123,123,86)
+    grid[9][11] = (225,102,45)
 
 
 """Face rotations"""
@@ -177,7 +184,7 @@ def face_rotation(row,direction): #theoretically works, no proof beyond isolated
         face[0] = [buffer1[0],buffer2[0],buffer3[0]]
         face[1] = [buffer1[1],buffer2[1],buffer3[1]]
         face[2] = [buffer1[2],buffer2[2],buffer3[2]]
-        print face
+
 
 
     if direction =='right':
@@ -187,21 +194,8 @@ def face_rotation(row,direction): #theoretically works, no proof beyond isolated
         face[0] = [buffer1[2],buffer2[2],buffer3[2]]
         face[1] = [buffer1[1],buffer2[1],buffer3[1]]
         face[2] = [buffer1[0],buffer2[0],buffer3[0]]
-        print face
 
-    if row == 'top':
-        top1 = face[0]
-        top2 = face[1]
-        top3 = face[2]
-        refresh()
-    if row == 'bottom':
-        bottom_row = face
-    if row == 'left':
-        left_side = face
-    if row == 'right':
-        right_side = face
-    if row == 'front':
-        front = face
+    return face
         
 """
 up/down side rotations
@@ -322,6 +316,8 @@ def rotate(row,direction):
         global right_side
         global back
         global front
+        global top_row
+        global bottom_row
         if direction == 'left':
 
             buffer1 = [left_side[row][0],left_side[row][1],left_side[row][2]] #Buffer exists in order to ensure no data is lost
@@ -333,18 +329,18 @@ def rotate(row,direction):
 
             print rows[row]
             if row == 0: #checks if top row
-                face_rotation('top','right')
+                top_row = face_rotation('top','left')
             elif row == 2: #checks for bottom row
-                face_rotation('bottom','left')
+                bottom_row = face_rotation('bottom','left')
         elif direction == 'right':
             buffer2 = [left_side[row][0],left_side[row][1],left_side[row][2]] #Buffer exists in order to ensure no data is lost
             buffer1 = [right_side[row][0],right_side[row][1],right_side[row][2]]
             buffer4 = [front[row][0],front[row][1],front[row][2]]
             buffer3 = [back[row][0],back[row][1],back[row][2]]
             if row == 0: #checks if top
-                face_rotation('top','left')
+                top_row = face_rotation('top','right')
             if row == 2: #checks if bottom row
-                face_rotation('bottom','right')
+                bottom_row = face_rotation('bottom','right')
             
         if direction == 'right':
 
@@ -388,47 +384,81 @@ def rotate(row,direction):
         if direction == 'up':
             if row == 4:
                 up(1)
-                face_rotation('left','left')
+                left_side = face_rotation('left','left')
             elif row == 5:
                 up(2)
             elif row == 6:
                 up(3)
-                face_rotation('right','right')
+                right_side = face_rotation('right','right')
         if direction  =='down':
             down(row)
             if row == 4:
-                face_rotation('left','right')
+                left_side = face_rotation('left','right')
             elif row == 6:
-                face_rotation('right','left')
-        else:
-            return False
+                right_side = face_rotation('right','left')
     elif 6<row<=9: #top region
         if direction == 'up':
             if row == 7:
                 side_up(3) #uses slightly modified up function code
-                face_rotation('front','right')
+                front = face_rotation('front','right')
             elif row == 8:
                 side_up(2)
             elif row == 9:
                 side_up(1)
-                face_rotation('back','right')
+                back = face_rotation('back','right')
                 
                 
         if direction == 'down':
             if row == 7:
                 side_down(3) #uses slightly modified down function code
-                face_rotation('front','left')
+                front = face_rotation('front','left')
             elif row == 8:
                 side_down(2)
             elif row == 9:
                 side_down(1)
-                face_rotation('back','right')
-            else:
-                return False
-    else:
-        return False
+                back = face_rotation('back','right')
+    return front,left_side,right_side,back,top_row,bottom_row
+    
+command = [0,0]
+def randomize():
+    global command
+    for f in range(randint(1,30)):
+                   fa = ["up","down","left","right"]
+                   
+                   a = randint(0,3)
+                   command[0]=fa[a]
+                   row = randint(0,5)
+                   if (row == 0 or row == 1 or row == 2):
+                       command[1] = 9
+                       if command[0] == "left":
+                           command[0] = "down"
+                           command[1] = up_down_conditional(row)
+                       elif command[0] == "right":
+                           command[0] = "up"
+                           command[1] = up_down_conditional(row)
+                       elif command[0] == "up":
+                           if column == 3:
+                               command[1] = 4
+                           if column == 4:
+                               command[1] = 5
+                           if column == 5:
+                               command[1] = 6
+                   elif row == 3 or row == 4 or row == 5:
+                       if command[0] == "left" or command[0] == 'right':
+                           if row == 3:
+                              command[1] = 1
+                           if row == 4:
+                              command[1] = 2
+                           if row == 5:
+                              command[1] = 3
+                   if command[0] != 0 and command[1] != 0:
+                        rotate(command[1],command[0])
+                        print command
+                        command = [0,0]
+                        front,left_side,right_side,back,top_row,bottom_row = refresh(left_side,right_side,top_row,bottom_row,front,back)
+           
 
-refresh()
+refresh(left_side,right_side,top_row,bottom_row,front,back)
 #starting pygame
 pygame.init()
 
@@ -437,12 +467,12 @@ WINDOW_SIZE = [425,460]
 screen = pygame.display.set_mode(WINDOW_SIZE)
 
 #Giving window a title
-pygame.display.set_caption("Rubicks Cube in python test v0.0001")
+pygame.display.set_caption("Rubicks Cube in python test v1")
 
 #manage refresh rate
 
 clock = pygame.time.Clock()
-command = [0,0]
+
 #variable that declares whether the game is running or not
 stopped = False
 while not stopped:
@@ -461,6 +491,13 @@ while not stopped:
                 command[0] = "up"
             if row == 11 and column == 6:
                 command[0] = "down"
+            if row == 11 and column == 11:
+                   randomize()
+            if row == 9 and column == 11:
+                front,left_side,right_side,back,top_row,bottom_row = reset()
+                print "Rubiks Cube Reset"
+                if debugging == True:
+                    output.write("\n --Rubiks Cube Reset--")
 
             if (row == 0 or row == 1 or row == 2) and column > 2 and column < 6:
                 command[1] = 9
@@ -486,7 +523,7 @@ while not stopped:
                     if row == 5:
                         command[1] = 3
     if command[0] != 0 and command[1] != 0:
-        rotate(command[1],command[0])
+        front,left_side,right_side,back,top_row,bottom_row = rotate(command[1],command[0])
         print command
         if debugging == True:
             output.write("\n %s"%(command))
@@ -497,7 +534,7 @@ while not stopped:
                 if i == 10:
                     break
         command = [0,0]
-    refresh()
+    refresh(left_side,right_side,top_row,bottom_row,front,back)
 
     #draw grid
     for row in range(13):
@@ -512,3 +549,5 @@ while not stopped:
 pygame.quit()
 """for i in range(10):
     print grid[i]"""
+if debugging == True:
+    output.close()
